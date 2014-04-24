@@ -47,7 +47,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"math/rand"
 	"os"
 	"time"
@@ -61,8 +60,7 @@ func main() {
 	flag.Parse()                     // Parse command-line flags.
 	rand.Seed(time.Now().UnixNano()) // Seed the random number generator.
 
-	c := NewChain(*prefixLen)     // Initialize a new Chain.
-	c.Build(os.Stdin)             // Build chains from standard input.
-	text := c.Generate(*numWords) // Generate text.
-	fmt.Println(text)             // Write text to standard output.
+	c := NewChain(*prefixLen)        // Initialize a new Chain.
+	c.Build(os.Stdin)                // Build chains from standard input.
+	c.Generate(os.Stdout, *numWords) // Generate text.
 }

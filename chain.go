@@ -47,20 +47,23 @@ func (c *Chain) Build(r io.Reader) {
 }
 
 // Generate returns a string of at most n words generated from Chain.
-func (c *Chain) Generate(n int) string {
+func (c *Chain) Generate(w io.Writer, n int) {
 	p := c.randomRoot()
+	bw := bufio.NewWriter(w)
+	defer bw.Flush()
 
-	words := []string{p.String()}
+	bw.WriteString(p.String())
 	for i := 0; i < n; i++ {
 		choices := c.chain[p.String()]
 		if len(choices) == 0 {
 			p = c.randomRoot()
 		}
 		next := choices[rand.Intn(len(choices))]
-		words = append(words, next)
 		p.Shift(next)
+
+		bw.WriteString(next)
+		bw.WriteString(" ")
 	}
-	return strings.Join(words, " ")
 }
 
 func (c *Chain) randomRoot() *Prefix {
